@@ -27,4 +27,13 @@ class UserModel {
       email: jsObject['email'],
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "name": name,
+      "username": username,
+      "email": email,
+    };
+  }
 }
