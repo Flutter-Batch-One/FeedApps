@@ -23,4 +23,14 @@ class PhotoModel {
       thumbnailUrl: jsObject['thumbnailUrl'],
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "albumId": albumId,
+      "title": title,
+      "url": url,
+      "thumbnailUrl": thumbnailUrl,
+    };
+  }
 }
