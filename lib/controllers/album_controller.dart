@@ -10,8 +10,8 @@ class AlbumController {
 
   Future<List<AlbumModel>> getAlbums(UserModel user) async {
     final List response = await api.get(
-      "https://jsonplaceholder.typicode.com/albums?userId=${user.id}",
-    );
+        "https://jsonplaceholder.typicode.com/albums?userId=${user.id}",
+        'cached_albums');
 
     final List<AlbumModel> albums =
         response.map(AlbumModel.fromJsObject).toList();
@@ -31,6 +31,7 @@ class AlbumController {
   Future<List<PhotoModel>> getPhotos(int photoId) async {
     final List response = await api.get(
       "https://jsonplaceholder.typicode.com/photos?albumId=$photoId",
+      'cached_photos',
     );
 
     return response.map(PhotoModel.fromJsObject).toList();
