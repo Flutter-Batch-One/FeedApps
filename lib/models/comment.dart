@@ -19,4 +19,14 @@ class CommentModel {
       body: jsObject['body'],
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "postId": postId,
+      "name": name,
+      "email": email,
+      "body": body,
+    };
+  }
 }
