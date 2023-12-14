@@ -4,13 +4,16 @@ import 'package:mini_project_one/controllers/user_controller.dart';
 import 'package:mini_project_one/models/album.dart';
 import 'package:mini_project_one/models/post.dart';
 import 'package:mini_project_one/models/user.dart';
+import 'package:mini_project_one/repositories/cache_repository.dart';
 
 class FeedController {
+  final CacheRepository repository;
   final UserController userController;
   final PostController postController;
   final AlbumController albumController;
 
   FeedController({
+    required this.repository,
     required this.userController,
     required this.postController,
     required this.albumController,
@@ -19,9 +22,23 @@ class FeedController {
   ///1 Get All Users
   ///2 Related Post,Album
   ///3 Show
+  ///1 one
+
+  static List<UserModel> users = [];
+
+  // static a() {
+  //   users;
+  // }
 
   Future<List<UserModel>> getUsers() async {
     final List<UserModel> users = await userController.getUsers();
+
+    if (users.isEmpty) {
+      ///NO INTERNET
+      // final List<UserModel> users = (await repository.get("cached_users"))
+      //     .map(UserModel.fromJsObject)
+      //     .toList();
+    }
 
     ///Post
     final List<Future<List<PostModel>>> posts = users.map((e) {
@@ -47,6 +64,11 @@ class FeedController {
       }));
       user.albums.addAll(userAlbums[i]);
     }
+
+    FeedController.users.clear();
+    FeedController.users.addAll(users);
+
+    repository.save(users);
 
     return users;
   }
