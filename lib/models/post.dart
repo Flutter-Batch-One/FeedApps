@@ -24,4 +24,13 @@ class PostModel {
       body: jsObject['body'],
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "userId": userId,
+      "title": title,
+      "body": body,
+    };
+  }
 }
