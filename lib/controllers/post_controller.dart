@@ -8,8 +8,9 @@ class PostController {
   PostController(this.api);
 
   Future<List<PostModel>> getPosts(int userId) async {
-    final List response = await api
-        .get("https://jsonplaceholder.typicode.com/posts?userId=$userId");
+    final List response = await api.get(
+        "https://jsonplaceholder.typicode.com/posts?userId=$userId",
+        'cached_posts');
 
     final List<PostModel> posts = response.map(PostModel.fromJsObject).toList();
     final List<List<CommentModel>> comments =
@@ -23,8 +24,9 @@ class PostController {
   }
 
   Future<List<CommentModel>> getComments(int postId) async {
-    final List response = await api
-        .get("https://jsonplaceholder.typicode.com/comments?postId=$postId");
+    final List response = await api.get(
+        "https://jsonplaceholder.typicode.com/comments?postId=$postId",
+        'cached_comments');
 
     return response.map(CommentModel.fromJsObject).toList();
   }
