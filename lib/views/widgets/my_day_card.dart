@@ -1,12 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:mini_project_one/models/photo.dart';
 import 'package:mini_project_one/views/widgets/circle_profile.dart';
 
 class MyDayCard extends StatelessWidget {
+  final PhotoModel photo;
   final bool showProfileImage;
   const MyDayCard({
     super.key,
     this.showProfileImage = true,
+    required this.photo,
   });
 
   @override
@@ -20,7 +23,7 @@ class MyDayCard extends StatelessWidget {
           ),
         ),
         child: CachedNetworkImage(
-          imageUrl: "https://via.placeholder.com/600/92c952",
+          imageUrl: photo.url,
           imageBuilder: (context, imageProvider) => Container(
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(8)),
@@ -41,9 +44,12 @@ class MyDayCard extends StatelessWidget {
                   : MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (showProfileImage) const CircleProfile(),
-                const Text(
-                  "Ye Myo Aung",
+                if (showProfileImage)
+                  CircleProfile(
+                    name: photo.user.name[0],
+                  ),
+                Text(
+                  photo.user.name,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 14,
