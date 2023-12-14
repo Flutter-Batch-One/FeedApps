@@ -19,4 +19,22 @@ class AlbumModel {
       title: jsObject['title'],
     );
   }
+
+  AlbumModel copy() {
+    final news = AlbumModel(
+      id: id,
+      userId: userId,
+      title: title,
+    );
+    news.photos.addAll(photos);
+    return news;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "userId": userId,
+      "title": title,
+    };
+  }
 }
