@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mini_project_one/models/post.dart';
 import 'package:mini_project_one/views/widgets/circle_profile.dart';
 import 'package:mini_project_one/views/widgets/post_action_card.dart';
 
 class PostCard extends StatelessWidget {
+  final PostModel post;
   final void Function()? onTap;
-  const PostCard({super.key, required this.onTap});
+  const PostCard({super.key, required this.post, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +26,16 @@ class PostCard extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: onTap,
-              child: const Row(
+              child: Row(
                 children: [
-                  CircleProfile(),
+                  CircleProfile(
+                    name: post.user.name[0].toString(),
+                  ),
                   SizedBox(
                     width: 10,
                   ),
                   Text(
-                    "Ye Myo Aung",
+                    post.user.name,
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                     ),
@@ -39,13 +43,13 @@ class PostCard extends StatelessWidget {
                 ],
               ),
             ),
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(top: 10, bottom: 5),
-              child: Text("Title"),
+              child: Text(post.title),
             ),
-            const Text("body"),
+            Text(post.body),
             const Divider(),
-            const SizedBox(
+            SizedBox(
               height: 40,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -55,8 +59,61 @@ class PostCard extends StatelessWidget {
                     label: "Favorite",
                   ),
                   PostActionButton(
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (
+                          _,
+                        ) =>
+                            Container(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Column(
+                            children: [
+                              Container(
+                                width: 100,
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(188, 188, 188, 0.4),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                margin: EdgeInsets.only(bottom: 20),
+                              ),
+                              Expanded(
+                                child: ListView.separated(
+                                  padding: EdgeInsets.only(
+                                      bottom: 20, left: 20, right: 20),
+                                  separatorBuilder: (_, __) => Divider(),
+                                  itemCount: post.comments.length,
+                                  itemBuilder: (_, i) {
+                                    final comment = post.comments[i];
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            CircleProfile(
+                                                name: comment.name[0]),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(comment.email),
+                                          ],
+                                        ),
+                                        Text(comment.name),
+                                        Text(comment.body)
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                     icon: Icons.mode_comment_outlined,
-                    label: "Comment",
+                    label: "Comment ${post.comments.length}",
                   ),
                   PostActionButton(
                     icon: Icons.share,

@@ -83,10 +83,10 @@ class DetailScreen extends StatelessWidget {
           const ImageSection(
             showProfileImage: false,
           ),
-          for (int i = 0; i < 10; i++)
-            const PostCard(
-              onTap: null,
-            ),
+          // for (int i = 0; i < 10; i++)
+          //   const PostCard(
+          //     onTap: null,
+          //   ),
           const TheEnd()
         ],
       ),
