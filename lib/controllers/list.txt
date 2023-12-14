@@ -1,0 +1,13 @@
+1. user data fetch
+2. post data
+3. comment data
+4. album data
+5. photo
+
+
+user > post[] > comment[]
+user > album[] > photo[]
+
+user
+post
+album
