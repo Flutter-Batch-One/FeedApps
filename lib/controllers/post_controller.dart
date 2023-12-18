@@ -7,6 +7,16 @@ class PostController {
 
   PostController(this.api);
 
+  List<PostModel> match(
+    List<PostModel> posts,
+    List<List<CommentModel>> comments,
+  ) {
+    for (var i = 0; i < posts.length; i++) {
+      posts[i].comments.addAll(comments[i]);
+    }
+    return posts;
+  }
+
   Future<List<PostModel>> getPosts(int userId) async {
     final List response = await api.get(
         "https://jsonplaceholder.typicode.com/posts?userId=$userId",
@@ -16,11 +26,7 @@ class PostController {
     final List<List<CommentModel>> comments =
         await Future.wait(posts.map((e) => getComments(e.id)).toList());
 
-    for (var i = 0; i < posts.length; i++) {
-      posts[i].comments.addAll(comments[i]);
-    }
-
-    return posts;
+    return match(posts, comments);
   }
 
   Future<List<CommentModel>> getComments(int postId) async {

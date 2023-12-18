@@ -4,8 +4,15 @@ class PostActionButton extends StatelessWidget {
   final String label;
   final IconData icon;
   final void Function()? onTap;
-  const PostActionButton(
-      {super.key, required this.label, required this.icon, this.onTap});
+  final Color? color;
+
+  const PostActionButton({
+    super.key,
+    required this.label,
+    required this.icon,
+    this.onTap,
+    this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +24,10 @@ class PostActionButton extends StatelessWidget {
         height: 40,
         child: Row(
           children: [
-            Icon(icon),
+            Icon(
+              icon,
+              color: color,
+            ),
             const SizedBox(
               width: 5,
             ),

@@ -8,6 +8,19 @@ class AlbumController {
 
   AlbumController(this.api);
 
+  List<AlbumModel> match(List<AlbumModel> albums, List<List<PhotoModel>> photos,
+      List<UserModel> user) {
+    for (var album in albums) {
+      album.photos.addAll(
+        photos[albums.indexWhere((element) => element.id == album.id)].map((e) {
+          e.user = user.firstWhere((element) => element.id == album.userId);
+          return e;
+        }),
+      );
+    }
+    return albums;
+  }
+
   Future<List<AlbumModel>> getAlbums(UserModel user) async {
     final List response = await api.get(
         "https://jsonplaceholder.typicode.com/albums?userId=${user.id}",
@@ -17,15 +30,8 @@ class AlbumController {
         response.map(AlbumModel.fromJsObject).toList();
     final List<List<PhotoModel>> photos =
         await Future.wait(albums.map((e) => getPhotos(e.id)).toList());
-    for (var alubm in albums) {
-      alubm.photos.addAll(
-        photos[albums.indexWhere((element) => element.id == alubm.id)].map((e) {
-          e.user = user;
-          return e;
-        }),
-      );
-    }
-    return albums;
+
+    return match(albums, photos, [user]);
   }
 
   Future<List<PhotoModel>> getPhotos(int photoId) async {

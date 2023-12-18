@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mini_project_one/repositories/like_repository.dart';
 import 'package:mini_project_one/views/screens/detail_screen.dart';
 import 'package:mini_project_one/views/screens/home_screen.dart';
 import 'package:mini_project_one/views/screens/not_found_screen.dart';
 import 'package:mini_project_one/views/screens/photo_view_screen.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await LikeRepository.init();
   runApp(const MiniSocailApp());
 }
 
@@ -19,7 +21,6 @@ class MiniSocailApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color.fromRGBO(255, 255, 255, 0.8),
       ),
       onGenerateRoute: (settings) {
-        print(settings.name);
         switch (settings.name) {
           case "/":
             return MaterialPageRoute(

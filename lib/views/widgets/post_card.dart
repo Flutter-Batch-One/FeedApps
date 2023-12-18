@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mini_project_one/models/post.dart';
+import 'package:mini_project_one/repositories/like_repository.dart';
 import 'package:mini_project_one/views/widgets/circle_profile.dart';
 import 'package:mini_project_one/views/widgets/post_action_card.dart';
 
 class PostCard extends StatelessWidget {
   final PostModel post;
   final void Function()? onTap;
+
   const PostCard({super.key, required this.post, required this.onTap});
 
   @override
@@ -54,9 +56,8 @@ class PostCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  PostActionButton(
-                    icon: Icons.favorite_border,
-                    label: "Favorite",
+                  LikeButton(
+                    post: post,
                   ),
                   PostActionButton(
                     onTap: () {
@@ -125,6 +126,35 @@ class PostCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class LikeButton extends StatefulWidget {
+  final PostModel post;
+
+  const LikeButton({
+    super.key,
+    required this.post,
+  });
+
+  @override
+  State<LikeButton> createState() => _LikeButtonState();
+}
+
+class _LikeButtonState extends State<LikeButton> {
+  @override
+  Widget build(BuildContext context) {
+    return PostActionButton(
+      color: LikeRepository.get(widget.post.id.toString()) ? Colors.red : null,
+      icon: LikeRepository.get(widget.post.id.toString())
+          ? Icons.favorite
+          : Icons.favorite_border,
+      onTap: () async {
+        await LikeRepository.action(widget.post.id.toString());
+        setState(() {});
+      },
+      label: "Favorite",
     );
   }
 }

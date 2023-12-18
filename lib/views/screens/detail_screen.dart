@@ -1,5 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:mini_project_one/models/photo.dart';
+import 'package:mini_project_one/models/user.dart';
+import 'package:mini_project_one/views/screens/not_found_screen.dart';
 import 'package:mini_project_one/views/widgets/circle_profile.dart';
 import 'package:mini_project_one/views/widgets/image_section.dart';
 import 'package:mini_project_one/views/widgets/post_card.dart';
@@ -11,10 +14,21 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final user = ModalRoute.of(context)?.settings.arguments;
+
+    if (user == null || user is! UserModel) {
+      return NotFoundScreen();
+    }
+
+    final coverPhotos = user.albums[1].photos;
+
+    final featurePhotos = user.albums.sublist(2).fold(<PhotoModel>[],
+        (previousValue, element) => [...previousValue, ...element.photos]);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Ye Myo Aung"),
+        title: Text(user.name),
       ),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 10),
@@ -24,16 +38,25 @@ class DetailScreen extends StatelessWidget {
             height: 230,
             child: Stack(
               children: [
-                CachedNetworkImage(
-                  imageUrl: "https://via.placeholder.com/600/92c952",
-                  height: 200,
-                  width: size.width,
-                  fit: BoxFit.cover,
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(
+                      '/view',
+                      arguments: coverPhotos,
+                    );
+                  },
+                  child: CachedNetworkImage(
+                    imageUrl: coverPhotos.first.url,
+                    height: 200,
+                    width: size.width,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-                const Positioned(
+                Positioned(
                   left: 10,
                   bottom: 0,
                   child: CircleProfile(
+                    name: user.name[0],
                     radius: 60,
                   ),
                 ),
@@ -43,7 +66,7 @@ class DetailScreen extends StatelessWidget {
           Container(
             height: 90,
             color: Colors.white,
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
@@ -54,7 +77,7 @@ class DetailScreen extends StatelessWidget {
                     bottom: 5,
                   ),
                   child: Text(
-                    "Ye Myo Aung",
+                    user.name,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
@@ -68,25 +91,27 @@ class DetailScreen extends StatelessWidget {
                     StaticCard(
                       width: 110,
                       icon: Icons.article,
-                      label: "100 Posts",
+                      label: "${user.posts.length} Posts",
                     ),
                     StaticCard(
                       width: 120,
                       icon: Icons.photo_rounded,
-                      label: "100 Albums",
+                      label: "${user.albums.length} Albums",
                     ),
                   ],
                 ),
               ],
             ),
           ),
-          const ImageSection(
+          ImageSection(
             showProfileImage: false,
+            photos: featurePhotos,
           ),
-          // for (int i = 0; i < 10; i++)
-          //   const PostCard(
-          //     onTap: null,
-          //   ),
+          for (int i = 0; i < user.posts.length; i++)
+            PostCard(
+              post: user.posts[i],
+              onTap: null,
+            ),
           const TheEnd()
         ],
       ),
